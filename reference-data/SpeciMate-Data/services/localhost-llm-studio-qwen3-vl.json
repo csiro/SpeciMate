@@ -1,0 +1,13 @@
+{
+  "model": "qwen/qwen3-vl-8b",
+  "name": "Localhost-LLM-Studio-qwen3-VL",
+  "template": "{\n  \"model\": \"[MODEL]\",\n  \"max_tokens\": [MAXTOKENS],\n  \"temperature\": 0,\n  \"messages\": [\n    {\"content\": \"[ROLE]\", \"role\": \"developer\"},\n    {\n      \"content\": [\n        {\"text\": \"[PROMPT]\n\n[ENTITIES]\", \"type\": \"text\"},\n        {\n          \"image_url\": {\n            \"url\": \"data:image/jpeg;base64,[BASE64_ENCODED_IMAGE]\"\n          },\n          \"type\": \"image_url\"\n        }\n      ],\n      \"role\": \"user\"\n    }\n  ],\n  \"response_format\": {\"type\": \"text\"}\n}",
+  "header": "Content-Type: application/json",
+  "maxtokens": "8192",
+  "maxrequests": "1",
+  "fields": "",
+  "servicetype": "Multimodal",
+  "url": "http://localhost:1234/v1/chat/completions",
+  "APIKey": "",
+  "active": "false"
+}

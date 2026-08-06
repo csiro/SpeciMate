@@ -1,0 +1,15 @@
+{
+  "ServiceType": "LLM",
+  "Active": "false",
+  "APIKey": "",
+  "Model": "openrouter/auto",
+  "Header": "Content-Type: application/json\nAuthorization: Bearer [XXXX]",
+  "URL": "https://openrouter.ai/api/v1/chat/completions",
+  "Template": "{\n  \"model\": \"[MODEL]\",\n  \"messages\": [\n    {\"content\": \"[ROLE]\", \"role\": \"developer\"},\n    {\n      \"content\": \"[PROMPT]\n\n[TEXT_TO_BE_PARSED]]\n\n[ENTITIES]\",\n      \"role\": \"user\"\n    }\n  ],\n  \"max_tokens\": [MAXTOKENS],\n  \"temperature\": 0,\n  \"response_format\": {\"type\": \"json_object\"}\n}\n",
+  "default": "false",
+  "maxTokens": "8192",
+  "Fields": "",
+  "maxRequests": "10",
+  "Name": "openRouter-test",
+  "Multimodal": "false"
+}

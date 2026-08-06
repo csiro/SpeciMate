@@ -1,0 +1,520 @@
+{
+  "displayId": "disp_20260714_172024",
+  "modified": "2026-07-14",
+  "name": "ANIC_WB_ExtraShort",
+  "definitionId": "1aaffa61-59d6-46bc-9079-aae775948ba3",
+    "groups": [
+    {
+      "fields": [
+        {
+          "visible": "false",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "37",
+          "renderHint": "single-line",
+          "fieldId": "end_date_precision2"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "38",
+          "renderHint": "single-line",
+          "fieldId": "informal_time"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "35",
+          "renderHint": "single-line",
+          "fieldId": "specify_end_date"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "31",
+          "renderHint": "single-line",
+          "fieldId": "specify_start_date"
+        },
+        {
+          "visible": "false",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "32",
+          "renderHint": "single-line",
+          "fieldId": "start_date_precision"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "34",
+          "renderHint": "single-line",
+          "fieldId": "end_date"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "30",
+          "renderHint": "single-line",
+          "fieldId": "start_date"
+        },
+        {
+          "visible": "false",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "33",
+          "renderHint": "single-line",
+          "fieldId": "start_date_precision2"
+        },
+        {
+          "visible": "false",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "36",
+          "renderHint": "single-line",
+          "fieldId": "end_date_precision"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "39",
+          "renderHint": "single-line",
+          "fieldId": "collector_s_"
+        }
+      ],
+      "groupId": "grp_4",
+      "groupOrder": "5",
+      "bgColor": "#EBF5FB",
+      "groupLabel": "Collecting Event"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "58",
+          "renderHint": "single-line",
+          "fieldId": "infraorder"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "59",
+          "renderHint": "single-line",
+          "fieldId": "superfamily"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "60",
+          "renderHint": "single-line",
+          "fieldId": "subtribe"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "61",
+          "renderHint": "single-line",
+          "fieldId": "suborder"
+        }
+      ],
+      "groupId": "grp_10",
+      "groupOrder": "12",
+      "bgColor": "#EBF5FB",
+      "groupLabel": "Additional Taxon Info"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "44",
+          "renderHint": "single-line",
+          "fieldId": "verbatim_collection_method"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "45",
+          "renderHint": "single-line",
+          "fieldId": "collection_method1__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "46",
+          "renderHint": "single-line",
+          "fieldId": "bait_lure1_type"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "47",
+          "renderHint": "single-line",
+          "fieldId": "collection_method1_remarks"
+        }
+      ],
+      "groupId": "grp_7",
+      "groupOrder": "8",
+      "bgColor": "#F9F9F9",
+      "groupLabel": "Collection Method"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "50",
+          "renderHint": "single-line",
+          "fieldId": "data_entry_type__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "51",
+          "renderHint": "multi-line,5",
+          "fieldId": "original_label"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "52",
+          "renderHint": "single-line",
+          "fieldId": "internal_notes"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "53",
+          "renderHint": "single-line",
+          "fieldId": "collection_object_remarks"
+        }
+      ],
+      "groupId": "grp_3",
+      "groupOrder": "10",
+      "bgColor": "#F9F9F9",
+      "groupLabel": "Collection Object Attributes"
+    },
+     {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "9",
+          "renderHint": "single-line",
+          "fieldId": "subspecies"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "10",
+          "renderHint": "single-line",
+          "fieldId": "subgenus"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "7",
+          "renderHint": "single-line",
+          "fieldId": "species_group"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "3",
+          "renderHint": "single-line",
+          "fieldId": "family"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "4",
+          "renderHint": "single-line",
+          "fieldId": "subfamily"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "6",
+          "renderHint": "single-line",
+          "fieldId": "genus"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "2",
+          "renderHint": "single-line",
+          "fieldId": "order"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "5",
+          "renderHint": "single-line",
+          "fieldId": "tribe"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "8",
+          "renderHint": "single-line",
+          "fieldId": "species"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "11",
+          "renderHint": "single-line",
+          "fieldId": "author___year"
+        }
+      ],
+      "groupId": "grp_9",
+      "groupOrder": "2",
+      "bgColor": "#F9F9F9",
+      "groupLabel": "Taxon"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "40",
+          "renderHint": "single-line",
+          "fieldId": "macrohabitat"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "41",
+          "renderHint": "single-line",
+          "fieldId": "microhabitat"
+        }
+      ],
+      "groupId": "grp_6",
+      "groupOrder": "6",
+      "bgColor": "#EBF5FB",
+      "groupLabel": "Locality Details"
+    },
+    {
+      "fields": [
+        {
+          "visible": "false",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "16",
+          "renderHint": "single-line",
+          "fieldId": "determined_date_precision2"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "17",
+          "renderHint": "single-line",
+          "fieldId": "determination_remarks"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "12",
+          "renderHint": "single-line",
+          "fieldId": "determiner_s_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "13",
+          "renderHint": "single-line",
+          "fieldId": "determined_date"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "14",
+          "renderHint": "single-line",
+          "fieldId": "specify_determined_date"
+        },
+        {
+          "visible": "false",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "15",
+          "renderHint": "single-line",
+          "fieldId": "determined_date_precision"
+        }
+      ],
+      "groupId": "grp_11",
+      "groupOrder": "3",
+      "bgColor": "#F9F9F9",
+      "groupLabel": "Determination"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "42",
+          "renderHint": "single-line",
+          "fieldId": "field_number"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "43",
+          "renderHint": "single-line",
+          "fieldId": "collecting_event_remarks"
+        }
+      ],
+      "groupId": "grp_4_7",
+      "groupOrder": "7",
+      "bgColor": "#EBF5FB",
+      "groupLabel": "Collecting Event"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "29",
+          "renderHint": "single-line",
+          "fieldId": "max_elevation"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "28",
+          "renderHint": "single-line",
+          "fieldId": "min_elevation"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "25",
+          "renderHint": "single-line",
+          "fieldId": "longitude"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "27",
+          "renderHint": "single-line",
+          "fieldId": "elevation_unit__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "26",
+          "renderHint": "single-line",
+          "fieldId": "latlong_type__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "19",
+          "renderHint": "single-line",
+          "fieldId": "state__pl_"
+        },
+         {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "20",
+          "renderHint": "single-line",
+          "fieldId": "locality_name"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "24",
+          "renderHint": "single-line",
+          "fieldId": "latitude"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "21",
+          "renderHint": "single-line",
+          "fieldId": "locality_remarks"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "18",
+          "renderHint": "single-line",
+          "fieldId": "country__pl_"
+        }
+      ],
+      "groupId": "grp_5",
+      "groupOrder": "4",
+      "bgColor": "#F9F9F9",
+      "groupLabel": "Locality"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "1",
+          "renderHint": "single-line",
+          "fieldId": "accessionno"
+        }
+      ],
+      "groupId": "grp_2",
+      "groupOrder": "1",
+      "bgColor": "#EBF5FB",
+      "groupLabel": "Collection Object"
+    }
+  ],
+  "date": "2026-07-10",
+  "layout": {
+    "rowGap": "6",
+    "sectionGap": "16",
+    "fieldGap": "8",
+    "gridColumns": "2",
+    "labelWidth": "120"
+  }
+}

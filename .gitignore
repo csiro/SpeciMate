@@ -1,0 +1,33 @@
+# macOS Finder metadata — ignored at every folder level
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# macOS filesystem metadata
+.Spotlight-V100
+.Trashes
+.fseventsd
+.TemporaryItems
+.DocumentRevisions-V100
+.VolumeIcon.icns
+
+# Finder custom folder icon file
+Icon?
+
+
+# Local secrets — never commit these
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Editor settings
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.swp

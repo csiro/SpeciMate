@@ -1,0 +1,8 @@
+{"ServiceType": "OCR","Active": "true","APIKey": "","Model": "","Header": "Content-Type: application/json","URL": "https://vision.googleapis.com/v1/images:annotate?key=[XXXX]","Template": "{
+  \"requests\": [
+    {
+      \"image\": {\"content\": \"[BASE64_ENCODED_IMAGE]\"},
+      \"features\": [{\"type\": \"DOCUMENT_TEXT_DETECTION\"}]
+    }
+  ]
+}","default": "false","maxTokens": "","Fields": "BASE64_ENCODED_IMAGE","maxRequests": "20","Name": "Google OCR","Multimodal": "false"}

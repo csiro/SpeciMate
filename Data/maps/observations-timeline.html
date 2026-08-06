@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Specimen collection locations</title>
+	<link rel="stylesheet" href="leaflet.css" />
+    <!-- Leaflet CSS -->
+    <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" /-->
+    
+    <style>
+      html, body {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        font-size: 10pt;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      #map {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+      .info-window {
+        padding: 6px 8px;
+      }
+      .info-window h3 {
+        margin: 0 0 5px 0;
+        font-size: 14px;
+      }
+      .info-window p {
+        margin: 5px 0;
+        font-size: 12px;
+      }
+      .custom-marker {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      }
+      .status-message {
+        background-color: #f8f9fa;
+        padding: 5px 10px;
+        margin: 0;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        border-bottom: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status" class="status-message"></div>
+    <div id="map"></div>
+    <script>
+      document.getElementById('status').textContent = 'HTML loaded';
+      console.log = function(m){ if (typeof liveCode !== 'undefined' && liveCode.smLog) liveCode.smLog(m); };
+    </script>
+
+    <!-- Leaflet JS -->
+    <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script-->
+	<script src="leaflet.js"></script>
+    
+    <script>
+      // This variable will be replaced at runtime with the dataset of obs
+      let markers = [[MARKERS]];
+
+      // Global variables
+      window.mapMarkers = {};
+      let map;
+
+      // Enhanced error logging function with verbose logging
+      function logError(message, error = null, state = {}) {
+        // Build detailed error message
+        let errorDetails = `${message}\n`;
+        
+        // Add error information if available
+        if (error) {
+          errorDetails += `Error: ${error.message}\n`;
+          errorDetails += `Stack: ${error.stack}\n`;
+        }
+        
+        // Add state information
+        errorDetails += '\nApplication State:\n';
+        errorDetails += `Map Initialized: ${isMapInitialized()}\n`;
+        errorDetails += `Marker Count: ${Object.keys(window.mapMarkers).length}\n`;
+        
+        // Add any additional state information passed in
+        if (Object.keys(state).length > 0) {
+          errorDetails += '\nContext:\n';
+          Object.entries(state).forEach(([key, value]) => {
+            errorDetails += `${key}: ${JSON.stringify(value)}\n`;
+          });
+        }
+        
+        // Log to console for debugging
+        console.error(errorDetails);
+        
+        // If LiveCode logging function exists, use it
+        if (typeof liveCode !== 'undefined' && liveCode.smLog) {
+          liveCode.smLog(errorDetails);
+        } else {
+          alert(errorDetails);
+        }
+
+        // Update status message
+        //updateStatus(`Error: ${message}`);
+      }
+
+      // Update status message
+      function updateStatus(message) {
+        const statusDiv = document.getElementById('status');
+        if (statusDiv) {
+          statusDiv.textContent = message;
+        }
+        //logError(message);
+      }
+
+      // Global error handler
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        logError(`Global JavaScript Error:\nMessage: ${msg}\nLine: ${lineNo}\nColumn: ${columnNo}`, error);
+        return false;
+      };
+
+      // Unhandled promise rejection handler
+      window.addEventListener('unhandledrejection', function(event) {
+        logError(`Unhandled Promise Rejection: ${event.reason}`, event.reason);
+      });
+
+      // Safety check functions
+      function isMapInitialized() {
+        return map && typeof map.setView === 'function';
+      }
+
+
+      // Marker click handler
+      window.triggerMarkerClick = function(markerId) {
+        try {
+          const marker = window.mapMarkers[markerId];
+          if (marker) {
+            marker.openPopup();
+            if (isMapInitialized()) {
+              map.setView(marker.getLatLng(), map.getZoom());
+            }
+          } else {
+            logError(`Marker with ID ${markerId} not found`);
+          }
+        } catch (error) {
+          logError(`Error in triggerMarkerClick for marker ${markerId}`, error);
+        }
+      };
+
+      // Data validation function for map markers
+      function validateMapMarkerData(data) {
+        // For map markers, we only need ID, latitude and longitude
+        if (!data.ID) {
+          return {
+            valid: false,
+            message: `Missing required ID field`
+          };
+        }
+        
+        if (data.latitude === undefined || data.latitude === null || 
+            data.longitude === undefined || data.longitude === null) {
+          return {
+            valid: false,
+            message: `Missing coordinates for ID ${data.ID}`
+          };
+        }
+        
+        const lat = parseFloat(data.latitude);
+        const lon = parseFloat(data.longitude);
+        
+        if (isNaN(lat) || isNaN(lon)) {
+          return {
+            valid: false,
+            message: `Invalid coordinates for ID ${data.ID}: lat=${data.latitude}, lon=${data.longitude}`
+          };
+        }
+        
+        // Check coordinate ranges
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+          return {
+            valid: false,
+            message: `Coordinates out of range for ID ${data.ID}: lat=${lat}, lon=${lon}`
+          };
+        }
+        
+        return { valid: true };
+      }
+
+      function initMap() {
+        // Validate input data
+        if (!Array.isArray(markers)) {
+          logError('Markers is not an array', null, { markersType: typeof markers, markersValue: markers });
+          return;
+        }
+        
+        if (markers.length === 0) {
+          updateStatus('No marker data available. Map initialized but empty.');
+        }
+
+        // Clear any existing map instance
+        if (map) {
+          try {
+            map.remove();
+            map = null;
+            window.mapMarkers = {}; // Clear marker references
+          } catch (error) {
+            logError('Error cleaning up existing map', error);
+          }
+        }
+        
+        try {
+          map = L.map('map');
+          const streets = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, Intermap, NRCan, &copy; OpenStreetMap contributors, and the GIS User Community'
+          });
+          
+          const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          });
+
+          const baseMaps = {
+            "Streets": streets,
+            "Satellite": satellite
+          };
+
+          streets.addTo(map);
+          L.control.layers(baseMaps).addTo(map);
+
+          const colors = [
+            "#FF0000", "#00FF00", "#0000FF", "#FFFF00",
+            "#FF00FF", "#00FFFF", "#FF7F50", "#8A2BE2", "#7FFF00"
+          ];
+          const collectorColors = {};
+          let colorIndex = 0;
+
+          const validMapMarkers = [];
+
+          // Track counts for status reporting
+          let validMapMarkersCount = 0;
+          let errorCount = 0;
+
+          markers.forEach((data, index) => {
+            try {
+              // Ensure data is an object
+              if (typeof data !== 'object' || data === null) {
+                console.warn(`Invalid data at index ${index}: expected object, got ${typeof data}`);
+                errorCount++;
+                return;
+              }
+              
+              const dataId = data.ID || `item_${index}`;
+              
+              // Process for map if it has valid coordinates
+              const mapValidation = validateMapMarkerData(data);
+              if (mapValidation.valid) {
+                validMapMarkersCount++;
+
+                // Assign colors to collectors
+                if (data.collector1 && !collectorColors[data.collector1]) {
+                  collectorColors[data.collector1] = colors[colorIndex % colors.length];
+                  colorIndex++;
+                }
+
+                const collectorColor = data.collector1 ? collectorColors[data.collector1] : "#999999";
+                const customIcon = L.divIcon({
+                  className: 'custom-marker',
+                  html: `<div style="background-color: ${collectorColor}; width: 15px; height: 15px; border-radius: 50%;"></div>`,
+                  iconSize: [15, 15],
+                  iconAnchor: [7, 7] // Fixed: Center the icon properly
+                });
+
+                const marker = L.marker([parseFloat(data.latitude), parseFloat(data.longitude)], {
+                  icon: customIcon,
+                  title: dataId,
+                  draggable: true
+                });
+                
+                window.mapMarkers[dataId] = marker;
+
+                let popupContent = `
+                <div class="info-window">
+                  <h3>${dataId}</h3>`;
+                
+                if (data.species) {
+                  popupContent += `<p><strong>Species:</strong> ${data.species}</p>`;
+                }
+                
+                if (data['collection start']) {
+                  popupContent += `<p><strong>Collected:</strong> ${data['collection start']}</p>`;
+                }
+                
+                if (data.locality || data.state || data.country) {
+                  let location = [];
+                  if (data.locality) location.push(data.locality);
+                  if (data.state) location.push(data.state);
+                  if (data.country) location.push(data.country);
+                  popupContent += `<p><strong>Location:</strong> ${location.join(', ')}</p>`;
+                }
+                
+                if (data.collector1) {
+                  popupContent += `<p><strong>Collector 1:</strong> ${data.collector1}</p>`;
+                }
+                if (data.collector2) {
+                  popupContent += `<p><strong>Collector 2:</strong> ${data.collector2}</p>`;
+                }
+                
+                popupContent += `</div>`;
+                
+                marker.bindPopup(popupContent);
+
+                marker.on({
+                  'click': () => {
+                    try {
+                      if (typeof liveCode !== 'undefined' && liveCode.smJSObservationInfo) {
+                        liveCode.smJSObservationInfo("observation", dataId);
+                      }
+                    } catch (error) {
+                      logError(`Error in marker click handler for ${dataId}`, error);
+                    }
+                  },
+                  
+                  'dragend': () => {
+                    try {
+                      const newLatLng = marker.getLatLng();
+                      if (typeof liveCode !== 'undefined' && liveCode.smJSUpdateLatLon) {
+                        liveCode.smJSUpdateLatLon(data.imageName || dataId, newLatLng.lat, newLatLng.lng);
+                      } else {
+                        console.log(`Updated position for ${data.imageName || dataId}: ${newLatLng.lat}, ${newLatLng.lng}`);
+                      }
+                    } catch (error) {
+                      logError(`Error in marker dragend handler for ${dataId}`, error);
+                    }
+                  },
+                  
+                  'mouseover': () => {
+                    try {
+                      marker.setOpacity(0.8);
+                      if (marker._popup) {
+                        marker.openPopup();
+                      }
+                    } catch (error) {
+                      logError(`Error in marker mouseover handler for ${dataId}`, error);
+                    }
+                  },
+                  
+                  'mouseout': () => {
+                    try {
+                      marker.setOpacity(1.0);
+                      if (marker._popup) {
+                        marker.closePopup();
+                      }
+                    } catch (error) {
+                      logError(`Error in marker mouseout handler for ${dataId}`, error);
+                    }
+                  }
+                });
+
+                marker.addTo(map);
+                validMapMarkers.push([parseFloat(data.latitude), parseFloat(data.longitude)]);
+              } else if (data.latitude !== undefined || data.longitude !== undefined) {
+                console.warn(`Invalid map marker: ${mapValidation.message}`);
+              }
+
+            } catch (error) {
+              errorCount++;
+              logError(`Error processing record at index ${index}`, error, { recordData: data });
+            }
+          });
+
+          // Update status message with processing results
+          const statusMessage = markers.length === 0 
+            ? 'No data to process. Map ready for data input.'
+            : `Processed ${markers.length} records: ${validMapMarkersCount} on map${errorCount > 0 ? `, ${errorCount} errors` : ''}`;
+          updateStatus(statusMessage);
+
+          // Handle map bounds if we have valid markers
+          if (validMapMarkers.length > 0) {
+            map.fitBounds(validMapMarkers);
+          } else {
+            map.setView([0, 0], 2); // Default view if no valid markers
+          }
+
+        } catch (error) {
+          logError('Error initializing map', error);
+        }
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMap);
+      } else {
+        // DOM is already ready
+        initMap();
+      }
+    </script>
+  </body>
+</html>

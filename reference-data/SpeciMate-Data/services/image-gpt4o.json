@@ -1,0 +1,15 @@
+{
+  "Name": "IMAGE-gpt4o",
+  "Multimodal": "false",
+  "APIKey": "",
+  "Model": "gpt-4o",
+  "Header": "Content-Type: application/json\nAuthorization: Bearer [XXXX]",
+  "URL": "https://api.openai.com/v1/chat/completions",
+  "Template": "{\n  \"model\": \"[MODEL]\",\n  \"max_tokens\": [\"MAXTOKENS\"],\n  \"temperature\": \"0\",\n  \"messages\": [\n    {\"content\": \"[ROLE]\", \"role\": \"developer\"},\n    {\n      \"content\": [\n        {\"text\": \"[PROMPT]\n\n[ENTITIES]\", \"type\": \"text\"},\n        {\n          \"image_url\": {\n            \"url\": \"data:image/jpeg;base64,[BASE64_ENCODED_IMAGE]\"\n          },\n          \"type\": \"image_url\"\n        }\n      ],\n      \"role\": \"user\"\n    }\n  ],\n  \"response_format\": {\"type\": \"json_object\"}\n}",
+  "default": "false",
+  "maxTokens": "4096",
+  "Fields": "[XXXX][MODEL][ROLE][PROMPT][TEXT_TO_BE_PARSED][ENTITIES][MAXTOKENS]",
+  "maxRequests": "20",
+  "ServiceType": "Multimodal",
+  "Active": "false"
+}

@@ -1,0 +1,23 @@
+{"ServiceType": "Multimodal","Active": "true","APIKey": "","Model": "gpt-4.1","Header": "Content-Type: application/json\nAuthorization: Bearer [XXXX]","URL": "https://api.openai.com/v1/chat/completions","Template": "{
+  \"model\": \"[MODEL]\",
+  \"max_tokens\": [MAXTOKENS],
+  \"temperature\": 0,
+  \"messages\": [
+    {\"content\": \"[ROLE]\", \"role\": \"developer\"},
+    {
+      \"content\": [
+        {\"text\": \"[PROMPT]
+
+[ENTITIES]\", \"type\": \"text\"},
+        {
+          \"image_url\": {
+            \"url\": \"data:image/jpeg;base64,[BASE64_ENCODED_IMAGE]\"
+          },
+          \"type\": \"image_url\"
+        }
+      ],
+      \"role\": \"user\"
+    }
+  ],
+  \"response_format\": {\"type\": \"json_object\"}
+}","default": "false","maxTokens": "32768","Fields": "[XXXX][MODEL][ROLE][PROMPT][TEXT_TO_BE_PARSED][ENTITIES][MAXTOKENS]","maxRequests": "20","Name": "IMAGE-gpt4.1","Multimodal": "false"}

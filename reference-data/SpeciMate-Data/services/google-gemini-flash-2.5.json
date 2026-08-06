@@ -1,0 +1,15 @@
+{
+  "ServiceType": "LLM",
+  "Active": "true",
+  "APIKey": "",
+  "Model": "gemini-2.5-flash",
+  "Header": "content-type: application/json\nx-goog-api-key: [XXXX]",
+  "URL": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+  "Template": "{\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"[ROLE]\n\n[PROMPT]\n\n[TEXT_TO_BE_PARSED]\n\n[ENTITIES]\"\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\"maxOutputTokens\": [MAXTOKENS]}\n}",
+  "default": "false",
+  "maxTokens": "16384",
+  "Fields": "[XXXX][ROLE][PROMPT][TEXT_TO_BE_PARSED][ENTITIES][MAXTOKENS]",
+  "maxRequests": "20",
+  "Name": "Google-Gemini-Flash-2.5",
+  "Multimodal": "false"
+}

@@ -1,0 +1,15 @@
+{
+  "Name": "Google-Gemini-Flash-2.5-multimodal",
+  "Multimodal": "true",
+  "APIKey": "",
+  "Model": "gemini-2.5-flash",
+  "Header": "content-type: application/json\nx-goog-api-key: [XXXX]",
+  "URL": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+  "Template": "{\n  \"contents\": [\n    {\n      \"parts\": [\n        {\"text\": \"[ROLE]\n\n[PROMPT]\n\n[ENTITIES]\"},\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/jpeg\",\n            \"data\": \"[BASE64_ENCODED_IMAGE]\"\n          }\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\"maxOutputTokens\": [MAXTOKENS]}\n}",
+  "default": "false",
+  "maxTokens": "32768",
+  "Fields": "[XXXX][ROLE][PROMPT][ENTITIES][BASE64_ENCODED_IMAGE][MAXTOKENS]",
+  "maxRequests": "20",
+  "ServiceType": "Multimodal",
+  "Active": "true"
+}

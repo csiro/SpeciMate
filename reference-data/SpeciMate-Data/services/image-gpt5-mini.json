@@ -1,0 +1,23 @@
+{"servicetype": "LLM","active": "true","apikey": "","model": "gpt-5-mini","header": "Content-Type: application/json
+Authorization: Bearer [XXXX]","url": "https://api.openai.com/v1/chat/completions","template": "{
+  \"model\": \"[MODEL]\",
+  \"max_completion_tokens\": [MAXTOKENS],
+  \"messages\": [
+    {\"content\": \"[ROLE]\", \"role\": \"developer\"},
+    {
+      \"content\": [
+        {\"text\": \"[PROMPT]
+
+[ENTITIES]\", \"type\": \"text\"},
+        {
+          \"image_url\": {
+            \"url\": \"data:image/jpeg;base64,[BASE64_ENCODED_IMAGE]\"
+          },
+          \"type\": \"image_url\"
+        }
+      ],
+      \"role\": \"user\"
+    }
+  ],
+  \"response_format\": {\"type\": \"json_object\"}
+}","default": "false","maxtokens": "16384","fields": "[XXXX][MODEL][ROLE][PROMPT][TEXT_TO_BE_PARSED][ENTITIES][MAXTOKENS]","maxrequests": "20","name": "IMAGE-gpt5-mini","Multimodal": "false"}

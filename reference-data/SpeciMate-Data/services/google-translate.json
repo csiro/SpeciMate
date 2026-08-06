@@ -1,0 +1,15 @@
+{
+  "ServiceType": "Translation",
+  "Active": "true",
+  "APIKey": "",
+  "Model": "",
+  "Header": "Content-Type: application/json",
+  "URL": "https://translation.googleapis.com/language/translate/v2?key=[XXXX]",
+  "Template": "{\"target\": \"en\", \"q\": \"[TEXT]\"}",
+  "default": "true",
+  "maxTokens": "4096",
+  "Fields": "[TEXT]",
+  "maxRequests": "20",
+  "Name": "Google Translate",
+  "Multimodal": "false"
+}

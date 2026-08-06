@@ -1,0 +1,456 @@
+{
+  "displayId": "disp_20260710_125001",
+  "modified": "2026-07-10",
+  "name": "HERB Unit WB Simple display",
+  "definitionId": "c9521c8a-96af-4dda-a5bf-867876438d05",
+  "groups": [
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "50",
+          "renderHint": "single-line",
+          "fieldId": "det_class"
+        }
+      ],
+      "groupId": "grp_1_3",
+      "groupOrder": "5",
+      "bgColor": "#F9F9F9",
+      "groupLabel": ""
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "8",
+          "renderHint": "multi-line,5",
+          "fieldId": "unit_internal_notes"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "6",
+          "renderHint": "single-line",
+          "fieldId": "count"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "2",
+          "renderHint": "single-line",
+          "fieldId": "catalog_number"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "3",
+          "renderHint": "single-line",
+          "fieldId": "herb_code__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "5",
+          "renderHint": "single-line",
+          "fieldId": "item_type__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "1",
+          "renderHint": "single-line",
+          "fieldId": "field_number"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "4",
+          "renderHint": "single-line",
+          "fieldId": "acc._no."
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "7",
+          "renderHint": "multi-line,5",
+          "fieldId": "unit_notes"
+        }
+      ],
+      "groupId": "grp_1783651534",
+      "groupOrder": "1",
+      "bgColor": "0,128,255",
+      "groupLabel": "Main"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "13",
+          "renderHint": "single-line",
+          "fieldId": "state__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "21",
+          "renderHint": "single-line",
+          "fieldId": "_min__elevation"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "20",
+          "renderHint": "single-line",
+          "fieldId": "verb._coord_system__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "19",
+          "renderHint": "single-line",
+          "fieldId": "coord.precision__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "16",
+          "renderHint": "single-line",
+          "fieldId": "latitude"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "23",
+          "renderHint": "single-line",
+          "fieldId": "elevation_unit__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "18",
+          "renderHint": "single-line",
+          "fieldId": "lat_long_type"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "17",
+          "renderHint": "single-line",
+          "fieldId": "longitude"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "22",
+          "renderHint": "single-line",
+          "fieldId": "max_elevation"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "10",
+          "renderHint": "single-line",
+          "fieldId": "other_collectors"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "14",
+          "renderHint": "single-line",
+          "fieldId": "start_date"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "2",
+          "displayOrder": "24",
+          "renderHint": "multi-line,3",
+          "fieldId": "habitat"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "11",
+          "renderHint": "single-line",
+          "fieldId": "locality_name"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "15",
+          "renderHint": "single-line",
+          "fieldId": "end_date"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "12",
+          "renderHint": "single-line",
+          "fieldId": "country"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "9",
+          "renderHint": "single-line",
+          "fieldId": "primary_collectors"
+        }
+      ],
+      "groupId": "grp_1783651558",
+      "groupOrder": "2",
+      "bgColor": "0,128,0",
+      "groupLabel": "Collecting Event"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "32",
+          "renderHint": "single-line",
+          "fieldId": "det_det._reference"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "33",
+          "renderHint": "single-line",
+          "fieldId": "det_determiners"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "30",
+          "renderHint": "single-line",
+          "fieldId": "det_form"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "26",
+          "renderHint": "single-line",
+          "fieldId": "det_genus"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "27",
+          "renderHint": "single-line",
+          "fieldId": "det_species"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "29",
+          "renderHint": "single-line",
+          "fieldId": "det_variety"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "25",
+          "renderHint": "single-line",
+          "fieldId": "det_family"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "28",
+          "renderHint": "single-line",
+          "fieldId": "det_subspecies"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "31",
+          "renderHint": "single-line",
+          "fieldId": "det_det._source__pl_"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "34",
+          "renderHint": "single-line",
+          "fieldId": "det_order_no."
+        }
+      ],
+      "groupId": "grp_1783651292",
+      "groupOrder": "3",
+      "bgColor": "255,128,128",
+      "groupLabel": "Determination"
+    },
+    {
+      "fields": [
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "39",
+          "renderHint": "single-line",
+          "fieldId": "sporophyte"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "47",
+          "renderHint": "single-line",
+          "fieldId": "juvenile"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "46",
+          "renderHint": "single-line",
+          "fieldId": "bark"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "45",
+          "renderHint": "single-line",
+          "fieldId": "buds"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "42",
+          "renderHint": "single-line",
+          "fieldId": "fertile_sterile"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "49",
+          "renderHint": "single-line",
+          "fieldId": "fruiting_body"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "44",
+          "renderHint": "single-line",
+          "fieldId": "sporangia"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "43",
+          "renderHint": "single-line",
+          "fieldId": "gametophyte"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "48",
+          "renderHint": "single-line",
+          "fieldId": "roots"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "36",
+          "renderHint": "single-line",
+          "fieldId": "spore"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "40",
+          "renderHint": "single-line",
+          "fieldId": "thallus"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "37",
+          "renderHint": "single-line",
+          "fieldId": "seed"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "41",
+          "renderHint": "single-line",
+          "fieldId": "fruit"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "38",
+          "renderHint": "single-line",
+          "fieldId": "leaves"
+        },
+        {
+          "visible": "true",
+          "readOnly": "false",
+          "span": "1",
+          "displayOrder": "35",
+          "renderHint": "single-line",
+          "fieldId": "flowers"
+        }
+      ],
+      "groupId": "grp_1783651062",
+      "groupOrder": "4",
+      "bgColor": "0,128,128",
+      "groupLabel": "Phenology"
+    }
+  ],
+  "date": "2026-07-10",
+  "layout": {
+    "rowGap": "6",
+    "sectionGap": "16",
+    "fieldGap": "8",
+    "gridColumns": "2",
+    "labelWidth": "120"
+  }
+}

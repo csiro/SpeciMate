@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Specimen collection locations</title>
+	<link rel="stylesheet" href="leaflet.css" />
+    <!-- Leaflet CSS -->
+    <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" /-->
+    
+    <style>
+      html, body {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        font-size: 10pt;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      #map {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+      .info-window {
+        padding: 6px 8px;
+      }
+      .info-window h3 {
+        margin: 0 0 5px 0;
+        font-size: 14px;
+      }
+      .info-window p {
+        margin: 5px 0;
+        font-size: 12px;
+      }
+      .custom-marker {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      }
+      .status-message {
+        background-color: #f8f9fa;
+        padding: 5px 10px;
+        margin: 0;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        border-bottom: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status" class="status-message"></div>
+    <div id="map"></div>
+    <script>
+      document.getElementById('status').textContent = 'HTML loaded';
+      console.log = function(m){ if (typeof liveCode !== 'undefined' && liveCode.smLog) liveCode.smLog(m); };
+    </script>
+
+    <!-- Leaflet JS -->
+    <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script-->
+	<script src="leaflet.js"></script>
+    
+    <script>
+      // This variable will be replaced at runtime with the dataset of obs
+      let markers = [{"country": "Papua New Guinea","imageName": "20171109_130243_CBG8312113_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1967-04-19","longitude": "146.666667","collector2": "30557","state": "Morobe","collector1": "Streimann  H.","locality": "Hump L.A.  Bulolo","latitude": "-7.166667","species": "Alpinia sp.","ID": "CBG8312113"},{"country": "Papua New Guinea","imageName": "20171113_125621_CANB61818_1_50pcnt.jpg","collection end": "","collection start": "2006-04-01","longitude": "","collector2": "12741","state": "","collector1": "Carr  C. E.","locality": "Kaitaki","latitude": "","species": "Riedelia","ID": "CANB61818.1"},{"country": "Indonesia","imageName": "20171110_100819_CANB587374_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-01-14","longitude": "","collector2": "BW 14134","state": "West Papua","collector1": "Sleumer & Vink","locality": "Mt. Kobreimot (Koebre) above Testega  Anggi Lakes.","latitude": "","species": "Alpinia","ID": "CANB587374.1"},{"country": "Indonesia","imageName": "20171110_100603_CANB88335_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1957-03-22","longitude": "","collector2": "BW 4323","state": "West Papua","collector1": "Koster  Ch.","locality": "Netherlands New Guinea. Cycloop mountains above Hollandia.","latitude": "","species": "Alpinia","ID": "CANB88335.1"},{"country": "Papua New Guinea","imageName": "20171115_112008_CANB226009_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1971-07-05","longitude": "","collector2": "UPNG 1544","state": "Western Highlands","collector1": "Powell  J. M.","locality": "Epp ridge  Upper Wahgi valley  Western Highlands District  New Guinea","latitude": "","species": "Zingiberaceae","ID": "CANB226009.1"},{"country": "Australia","imageName": "20171115_112039_CANB226010_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "UPNG 1544","state": "","collector1": "Powell","locality": "","latitude": "","species": "","ID": "CANB226010.2"},{"country": "Papua New Guinea","imageName": "20171113_130842_CANB48489_1_50pcnt.jpg","collection end": "","collection start": "1935-07-10","longitude": "","collector2": "12803","state": "","collector1": "Carr  C. E.","locality": "Koitaki","latitude": "","species": "Riedelia","ID": "CANB48489.1"},{"country": "Malaysia","imageName": "20171110_111326_CANB143375_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1961-08-05","longitude": "116.6833","collector2": "RSNB No. 1652","state": "Sabah","collector1": "Chew  W. L.; Corner  E. J. H.; Stainton  A.","locality": "Mt. Kinabalu; Ulu Langanani  6 04' N  116 40-44' E","latitude": "6.0667","species": "Amomum","ID": "CANB143375.1"},{"country": "Indonesia","imageName": "20171115_114131_CANB561933_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1990-03-19","longitude": "123.666667","collector2": "4029","state": "North Sulawesi","collector1": "Burley  J. S.; Turkirin et al.","locality": "220 km W. of Manado; 50 km inland from Pangi  on tributary of Sungai Ilanga","latitude": "0.683333","species": "Zingiberaceae","ID": "CANB561933"},{"country": "Indonesia","imageName": "20171110_100710_CANB118893_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1960-05-17","longitude": "","collector2": "BW 8660","state": "","collector1": "Vink & Schram","locality": "Motito  Wissel Lakes  Div. Central New Guinea","latitude": "","species": "Alpinia","ID": "CANB118893.1"},{"country": "Papua New Guinea","imageName": "20171113_124613_CANB142403_1_50pcnt.jpg","collection end": "","collection start": "1962-11-30","longitude": "146.9667","collector2": "10989","state": "Morobe","collector1": "Hartley  T. G.","locality": "South side of the Markham River about 7 miles W of Lae","latitude": "-6.7333","species": "Alpinia","ID": "CANB142403.1"},{"country": "Indonesia","imageName": "20171110_101224_CANB597038_1_50pcnt_qlty80.jpg","collection end": "","collection start": "2000-04-06","longitude": "136.9667","collector2": "10415","state": "","collector1": "Johns  R.J.; Triono  T.; Utteridge  T.M.A.; Kasmin  O.","locality": "Papua. Mimika Regency  PT-Freeport Indonesia Concession Area: West of Main Rd at c. Mile 40  PT-Freeport Indonesia Environmental Department biodiversity plot 7.","latitude": "-4.3167","species": "Alpinia","ID": "CANB597038.1"},{"country": "Indonesia","imageName": "20171110_112902_CANB132756_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1954-03-04","longitude": "101.2644","collector2": "14163","state": "Sumatra","collector1": "Alston  A. H. G.","locality": "Vicinity of Mt. Kerinci","latitude": "-1.6975","species": "Amomum","ID": "CANB132756.1"},{"country": "Malaysia","imageName": "20171110_104840_CANB686843_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1987-09-11","longitude": "113.4167","collector2": "277","state": "Sarawak","collector1": "Burley  J.S. & Lee  B.","locality": "60 km NE of Bintulu on Miri Road  Similajau Forest Reserve","latitude": "3.3333","species": "Alpinia","ID": "CANB686843"},{"country": "Papua New Guinea","imageName": "20171110_114638_CANB110733_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1954-09-14","longitude": "150.3333","collector2": "4742","state": "Milne Bay","collector1": "Hoogland  R.D.","locality": "near Guru village (N. count of Cape Vogel Peninsula)  Milne Bay District  Terr. of Papua","latitude": "-10.3167","species": "Amomum","ID": "CANB110733.1"},{"country": "Papua New Guinea","imageName": "20171115_111421_CANB825960_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1999-10-19","longitude": "144.4833","collector2": "9534","state": "","collector1": "Gardner  R.O.","locality": "Schrader Range  Kaironk Valley","latitude": "-5.2000","species": "Zingiberaceae","ID": "CANB00825960"},{"country": "Indonesia","imageName": "20171110_100638_CANB118898_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1960-05-23","longitude": "","collector2": "BW 8826","state": "","collector1": "Vink & Schram","locality": "Monauglito  S. of Moenajepa  Wissel Lakes  Div. Central New Guinea","latitude": "","species": "Alpinia","ID": "CANB118898.1"},{"country": "Indonesia","imageName": "20171110_103408_CANB86870_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1957-01-25","longitude": "","collector2": "BW 4168","state": "","collector1": "Sijde  H. A. v. d.","locality": "Hollandia 'Polimac'  Netherlands New Guinea","latitude": "","species": "Alpinia","ID": "CANB86870.1"},{"country": "","imageName": "20171109_132146_CANB230883_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "8467","state": "","collector1": "Paijmans","locality": "","latitude": "","species": "","ID": "CANB230883.2"},{"country": "Papua New Guinea","imageName": "20171115_091135_CANB686846_1_50pcnt.jpg","collection end": "","collection start": "","longitude": "145.785","collector2": "","state": "Madang","collector1": "Gozapao  G.","locality": "Dumbu  Ramu  Madang","latitude": "-5.221","species": "Zingiber","ID": "CANB686846"},{"country": "Indonesia","imageName": "20171110_113126_CANB687326_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1988-03-25","longitude": "113.7333","collector2": "400","state": "Central Kalimantan","collector1": "Burley  J. S.; Tukirin et al.","locality": "Headwaters of S. Kahayan  5 km NE of Haruwu village  alluvial terrace E. of Nyoohay tributary","latitude": "-0.4667","species": "Amomum","ID": "CANB00687326"},{"country": "Papua New Guinea","imageName": "20171110_091640_CANB175955_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-10-01","longitude": "146.25","collector2": "ANU 5892","state": "Eastern Highlands","collector1": "Wheeler  J.M.","locality": "Forest above Noreikora Swamp  Kainantu Subdistrict.","latitude": "-6.5","species": "Alpinia","ID": "CANB175955.1"},{"country": "Australia","imageName": "20171110_130641_CANB203093_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "37746","state": "","collector1": "Millar  N.G.F.","locality": "","latitude": "","species": "","ID": "CANB203093.2"},{"country": "Papua New Guinea","imageName": "20171115_110453_CANB100425_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1960-04-05","longitude": "147.0","collector2": "F11977","state": "Morobe","collector1": "Henty  E. E.","locality": "Busu River  Morobe District","latitude": "-6.75","species": "Zingiberaceae","ID": "CANB100425.1"},{"country": "Australia","imageName": "20171115_113750_CANB542545_2_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB542545.2"},{"country": "Papua New Guinea","imageName": "20171115_110843_CANB169717_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1964-02-02","longitude": "145.0000","collector2": "NGF 23122","state": "Eastern Highlands","collector1": "Millar  A. N.","locality": "Keglsugl  Chimbu subdist.  Eastern Highlands  T.N.G.  alt. 8500'.","latitude": "-6.0000","species": "","ID": "CANB169717.1"},{"country": "Papua New Guinea","imageName": "20171113_133838_CANB175521_1_50pcnt.jpg","collection end": "","collection start": "1967-09-17","longitude": "141.5","collector2": "7325","state": "Western Province","collector1": "Pullen  R.","locality": "D'Albertis Junction  upper Fly River","latitude": "-7.5","species": "Riedelia Oliv.","ID": "CANB175521.1"},{"country": "Papua New Guinea","imageName": "20171109_130800_CANB686858_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1974-07-23","longitude": "147.75","collector2": "LAE 61986","state": "Northern","collector1": "Croft  J. R. et al.","locality": "Eastern side lake Myola  No. 1. Subdistrict: Kokoda; District: Northern","latitude": "-9.1667","species": "Alpinia","ID": "CANB686858.1"},{"country": "Indonesia","imageName": "20171110_102923_CANB128308_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1961-11-27","longitude": "","collector2": "7360","state": "","collector1": "van Royen  P. & Sleumer  H.","locality": "West Papua. Netherlands New Guinea  Vogelkop Peninsula  Nettoti Range  S slope of Mt Nettoti  path Andjai-Wekari R.","latitude": "","species": "Alpinia","ID": "CANB128308.1"},{"country": "Australia","imageName": "20171115_112335_CANB152744_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB152744.2"},{"country": "Papua New Guinea","imageName": "20171113_132015_CANB687110_1_50pcnt.jpg","collection end": "","collection start": "1973-09-26","longitude": "147.65","collector2": "LAE 60019","state": "Central","collector1": "Foreman  D. et al.","locality": "West of Efogi  District Central  Subdistrict Port Moresby  Manumu  Boridi  Mt. Bellamy  Kagi  Efogi  Launumu  Lake Myola No. 2  Kokoda Trail  The Gap","latitude": "-9.1667","species": "Riedelia","ID": "CANB687110"},{"country": "Papua New Guinea","imageName": "20171115_093130_CANB339208_1_50pcnt.jpg","collection end": "","collection start": "1970-03-06","longitude": "145.0333","collector2": "","state": "","collector1": "Higgins  J. J.","locality": "Along trail Keglsugl to Mt. Wilhelm","latitude": "-5.7833","species": "Alpinia sp.","ID": "CANB339208.1"},{"country": "Papua New Guinea","imageName": "20171113_131945_CANB696948_2_50pcnt.jpg","collection end": "","collection start": "1997-03-17","longitude": "145.0000","collector2": "11831","state": "Chimbu (Simbu) Province","collector1": "Takeuchi  W.","locality": "Crater Mt. Wildlife Management Area  E of Haia village; colls. centered on 6 43' S  145 00' E; hill forest with some anthropogenic disturbance","latitude": "-6.7167","species": "Alpinia sp.","ID": "CANB696948.2"},{"country": "Australia","imageName": "20171113_134309_CANB197243_5_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB197243.5"},{"country": "Australia","imageName": "20171113_134236_CANB197241_3_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB197241.3"},{"country": "Australia","imageName": "20171113_133920_CANB175274_3_50pcnt.jpg","collection end": "","collection start": "","longitude": "149.1300","collector2": "","state": "Australian Capital Territory","collector1": "","locality": "Canberra","latitude": "-35.2809","species": "","ID": "CANB175274.3"},{"country": "Papua New Guinea","imageName": "20171113_114952_CANB825836_1_50pcnt.jpg","collection end": "","collection start": "1993-11-11","longitude": "144.0333","collector2": "7322","state": "","collector1": "Gardner  R.O.","locality": "Schrader Range  Kaironk Valley  stream on south side of Kaironk River  near base of Matapy ridge","latitude": "-5.0167","species": "Riedelia","ID": "CANB825836"},{"country": "Papua New Guinea","imageName": "20171115_091109_CANB542864_1_50pcnt.jpg","collection end": "","collection start": "1990-05-11","longitude": "145.0833","collector2": "5712","state": "Eastern Highlands","collector1": "Takeuchi  W.","locality": "Mount Wilhelm near Keglsugl","latitude": "-5.8167","species": "Zingiber sp.","ID": "CANB542864"},{"country": "Indonesia","imageName": "20171110_101052_CANB588007_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-05-21","longitude": "","collector2": "BW 13924","state": "West Papua","collector1": "Koster  Ch.","locality": "Mt. Lensemoi  near Minjambau  Arfak Mountains.","latitude": "","species": "Alpinia","ID": "CANB588007.1"},{"country": "Papua New Guinea","imageName": "20171115_111524_CANB686847_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1989-03-01","longitude": "","collector2": "","state": "Madang","collector1": "Mente  E.","locality": "Dumpu  Ramu","latitude": "","species": "sp.","ID": "CANB686847"},{"country": "Papua New Guinea","imageName": "20171113_134156_CANB197239_1_50pcnt.jpg","collection end": "","collection start": "1966-08-02","longitude": "142.8333","collector2": "10.809","state": "East Sepik","collector1": "Hoogland  R. D. & Craven  L. A.","locality": "Along Yapa (Hunstein River)  Ambunti Subdistrict  Sepik District  Territory of New Guinea","latitude": "-4.3333","species": "Riedelia Oliv.","ID": "CANB197239.1"},{"country": "Australia","imageName": "20171113_133859_CANB175273_2_50pcnt.jpg","collection end": "","collection start": "","longitude": "149.1300","collector2": "","state": "Australian Capital Territory","collector1": "","locality": "Canberra","latitude": "-35.2809","species": "","ID": "CANB175273.2"},{"country": "Papua New Guinea","imageName": "20171110_130716_CANB203092_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1968-07-16","longitude": "146.0000","collector2": "NGF.37746","state": "","collector1": "Millar  A.N.","locality": "Above Mam  Kar Kar Island  Madang District","latitude": "-4.8333","species": "Etlingera","ID": "CANB203092.1"},{"country": "Papua New Guinea","imageName": "20171113_115309_CANB825430_1_50pcnt.jpg","collection end": "","collection start": "1999-12-19","longitude": "144.4833","collector2": "10015","state": "","collector1": "Gardner  R.O.","locality": "Schrader Range  Kaironk Valley","latitude": "-5.2167","species": "Riedelia","ID": "CANB825430"},{"country": "Indonesia","imageName": "20171110_114916_CANB687324_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1988-03-28","longitude": "113.7333","collector2": "468","state": "Central Kalimantan","collector1": "Burley  J. S.; Tukirin et al.","locality": "Headwaters of S. Kahayan; 5 km NE of Haruwu village  E of Nyoohay tributary of S. Miri.","latitude": "-0.4667","species": "Brachychilium","ID": "CANB6867324"},{"country": "Papua New Guinea","imageName": "20171115_111825_CANB62576_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1935-11-20","longitude": "","collector2": "13421","state": "","collector1": "Carr  C. E.","locality": "Boridi","latitude": "","species": "","ID": "CANB62576.1"},{"country": "Australia","imageName": "20171115_112235_CANB154976_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "149.1300","collector2": "6001","state": "Australian Capital Territory","collector1": "Pullen  R.","locality": "Canberra","latitude": "-35.2809","species": "","ID": "CANB154976.2"},{"country": "Papua New Guinea","imageName": "20171110_133420_CANB825840_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1999-12-30","longitude": "144.4833","collector2": "10079","state": "","collector1": "Gardner  R.O.","locality": "Schrader Range  Kaironk Valley","latitude": "-5.2167","species": "Geanthus","ID": "CANB825840"},{"country": "","imageName": "20171110_100846_CANB587374_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "BW14134","state": "","collector1": "Sleumer & Vink","locality": "","latitude": "","species": "","ID": "CANB587374.2"},{"country": "Indonesia","imageName": "20171110_102220_CANB96126_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1959-05-21","longitude": "","collector2": "4103","state": "","collector1": "Kalkman  C.","locality": "Papua. Orion Mts.  Tenmasigin.","latitude": "","species": "Alpinia","ID": "CANB96126.1"},{"country": "Australia","imageName": "20171115_113342_CANB86587_2_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB86587.2"},{"country": "Papua New Guinea","imageName": "20171110_102532_CANB119121_2_50pcnt_qlty80.jpg","collection end": "","collection start": "1960-09-06","longitude": "","collector2": "135","state": "Eastern Highlands","collector1": "Borgmann  E.","locality": "Territory of New Guinea. Komanemambuno.","latitude": "","species": "Alpinia","ID": "CANB119121.2"},{"country": "Papua New Guinea","imageName": "20171110_113749_CANB113497_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-06-12","longitude": "146.75","collector2": "15005","state": "Morobe","collector1": "van Royen  P.","locality": "Kauli Creek  Wau  Morobe District","latitude": "-7.3333","species": "Amomum","ID": "CANB113497.1"},{"country": "Papua New Guinea","imageName": "20171115_095356_CANB46036_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1957-09-10","longitude": "145.3833","collector2": "1247","state": "Eastern Highlands","collector1": "Robbins  R. G.","locality": "Collins mill  Omahaiga River Valley  Goroka Sub-District","latitude": "-6.0833","species": "Riedelia Oliv.","ID": "CANB46036.1"},{"country": "Papua New Guinea","imageName": "20171113_123410_CANB173099_1_50pcnt.jpg","collection end": "","collection start": "1966-07-30","longitude": "143.6167","collector2": "1454","state": "East Sepik","collector1": "Heyligers  P. C.","locality": "4 km ENE of Dreikikir  Sepik District  Territory of New Guinea","latitude": "-3.6167","species": "Riedelia","ID": "CANB173099.1"},{"country": "Papua New Guinea","imageName": "20171113_131653_CANB175102_1_50pcnt.jpg","collection end": "","collection start": "1966-06-22","longitude": "","collector2": "ANU 7312","state": "Eastern Highlands","collector1": "Wade  L. K.","locality": "Montane forest near Keglsugl  Eastern Highlands (Keglsugl-Pindaunde track)","latitude": "","species": "Alpinia","ID": "CANB175102.1"},{"country": "Papua New Guinea","imageName": "20171115_093803_CANB173102_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-09-06","longitude": "142.05","collector2": "1677","state": "Sepik","collector1": "Heyligers  P. C.","locality": "5 km SSE of Lumi; Sepik District  Territory of New Guinea","latitude": "-3.5833","species": "Riedelia","ID": "CANB173102.1"},{"country": "Papua New Guinea","imageName": "20171109_130617_CANB686482_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1977-04-09","longitude": "144.1000","collector2": "7631","state": "Western Highlands","collector1": "Veldkamp  J. F. & Vinas  A.","locality": "Mt Kegum (N ridge Mt Hagen)","latitude": "-5.7000","species": "Alpinia","ID": "CANB686482.1"},{"country": "Australia","imageName": "20171113_134218_CANB197240_2_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB197240.2"},{"country": "","imageName": "20171109_131753_CANB587768_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "NGF 34908","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB587768.2"},{"country": "Papua New Guinea","imageName": "20171115_105532_CANB593207_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1979-11-06","longitude": "142.4167","collector2": "71532","state": "Western","collector1": "Croft  J. R. & Gideon  O.","locality": "Mougulu  Nomad Subprovince","latitude": "-6.2833","species": "","ID": "CANB5953207"},{"country": "Indonesia","imageName": "20171113_134121_CANB87164_1_50pcnt.jpg","collection end": "","collection start": "1959-05-22","longitude": "140.7167","collector2": "BW 8451","state": "Papua","collector1": "Vink  W.","locality": "Netherlands New Guinea  Division Hollandia  Bodem-river  near Kwansem bivouac; 200 km west of Hollandia","latitude": "-2.5333","species": "Riedelia Oliv.","ID": "CANB87164.1"},{"country": "Indonesia","imageName": "20171110_100222_CANB87208_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1957-08-08","longitude": "","collector2": "BW 3780","state": "West Papua","collector1": "Kalkman  C.","locality": "Netherlands New Guinea  Soeadjaf (south of lake Sentani)","latitude": "","species": "Alpinia","ID": "CANB87208.1"},{"country": "Papua New Guinea","imageName": "20171113_131920_CANB696948_1_50pcnt.jpg","collection end": "","collection start": "1997-03-17","longitude": "145.000000","collector2": "11831","state": "Chimbu (Simbu) Province","collector1": "Takeuchi  W.","locality": "Crater Mt. Wildlife Management Area  E of Haia village; colls. centered on 6 43' S  145 00' E; hill forest with some anthropogenic disturbance","latitude": "-6.716667","species": "Alpinia","ID": "CANB696948"},{"country": "Solomon Islands","imageName": "20171113_122448_CANB232758_1_50pcnt.jpg","collection end": "","collection start": "1965-08-09","longitude": "161.75","collector2": "2358","state": "","collector1": "Munt  P.F.","locality": "San Cristobal  South thuni river  Edge of garden","latitude": "-10.45","species": "Riedelia sp.","ID": "CANB232758.1"},{"country": "Papua New Guinea","imageName": "20171110_111140_CANB819689_1_50pcnt_qlty80.jpg","collection end": "","collection start": "2008-10-28","longitude": "145.783","collector2": "2951","state": "Madang Province","collector1": "Ctvrtecka  R.","locality": "Mis Village  Madang Province  Papua New Guinea","latitude": "-5.15","species": "Amomum aculeatum","ID": "CANB818689"},{"country": "Papua New Guinea","imageName": "20171115_111549_CANB686839_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1986-05-07","longitude": "143.3500","collector2": "708","state": "Western","collector1": "Simaga  J.M.","locality": "Kunini Village  Daru District","latitude": "-9.5000","species": "","ID": "CANB686839"},{"country": "Sri Lanka","imageName": "20171109_101817_CANB686872_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1969-03-12","longitude": "80.8122","collector2": "1099","state": "","collector1": "Grierson  A.","locality": "Central Province; Nuwara Eliya District  Horton Plains on track to Kirigalpota","latitude": "6.8028","species": "Alpinia abundiflora Burtt & R.M.Sm.","ID": "CANB 686872"},{"country": "Papua New Guinea","imageName": "20171115_105748_CANB124937_1_50pcnt_qlty80.jpg","collection end": "1953-11-01","collection start": "1953-04-02","longitude": "150.0","collector2": "21796","state": "Milne Bay","collector1": "Brass  L.","locality": "Okawabero River  Cape Vogel Peninsula","latitude": "-10.0","species": "","ID": "CANB124937.1"},{"country": "","imageName": "20171110_092041_CANB175667_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "ANU 5560","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB175667.2"},{"country": "Papua New Guinea","imageName": "20171115_110338_CANB540736_2_50pcnt_qlty80.jpg","collection end": "","collection start": "1992-01-23","longitude": "146.0833","collector2": "3082","state": "Madang Province","collector1": "Simaga  J.M.","locality": "Near Teptep government station","latitude": "-5.6167","species": "","ID": "CANB540736.2"},{"country": "Papua New Guinea","imageName": "20171110_091850_CANB177954_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-06-15","longitude": "144.0086","collector2": "ANU 6107","state": "Western Highlands","collector1": "Wheeler  J.M.","locality": "Tomba track  SW side of Mt. Hagen.","latitude": "-5.7855","species": "Alpinia","ID": "CANB177954.1"},{"country": "Indonesia","imageName": "20171110_103408_CANB86870_1_50pcnt.jpg","collection end": "","collection start": "1957-01-25","longitude": "140.7167","collector2": "BW 4168","state": "","collector1": "Sijde  H. A. v. d.","locality": "West Papua. Hollandia 'Polimac'  Netherlands New Guinea","latitude": "-2.5333","species": "Alpinia","ID": "CANB86870.1"},{"country": "Papua New Guinea","imageName": "20171110_113901_CANB62512_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1935-03-11","longitude": "","collector2": "11646","state": "","collector1": "Carr  C. E.","locality": "Verjo  secondary forest","latitude": "","species": "Amomum","ID": "CANB62512.1"},{"country": "Papua New Guinea","imageName": "20171109_130512_CANB687339_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1973-10-20","longitude": "142.8333","collector2": "9370","state": "Southern Highlands","collector1": "Jacobs  M.","locality": "Mt. Bosavi  Northern side  East of mission station","latitude": "-6.4333","species": "Alpinia","ID": "CANB687339.1"},{"country": "Papua New Guinea","imageName": "20171110_105523_CANB328912_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1970-01-25","longitude": "146.7167","collector2": "153","state": "","collector1": "Winters  H. F.; Higgins  J. J.","locality": "Patep II Village  between Lae and Wau  Papua New Guinea","latitude": "-7.3333","species": "Alpinia","ID": "CANB328912.1"},{"country": "Indonesia","imageName": "20171110_100341_CANB48871_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1955-03-23","longitude": "","collector2": "BW 3061","state": "Papua","collector1": "Versteegh  Chr.","locality": "Res. Biak. Aruta. Wissel Lake Region.","latitude": "","species": "Alpinia","ID": "CANB48871.1"},{"country": "Indonesia","imageName": "20171110_100745_CANB587372_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-01-16","longitude": "","collector2": "BW 14180","state": "West Papua","collector1": "Sleumer & Vink","locality": "Mt. Ukdehotmamot  S. side of Lake Anggi Gigi","latitude": "","species": "Alpinia","ID": "CANB587372.1"},{"country": "","imageName": "20171110_091529_CANB178768_2_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "ANU 6368","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB178768.2"},{"country": "Indonesia","imageName": "20171110_103513_CANB131480_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1961-10-31","longitude": "","collector2": "7600","state": "","collector1": "van Royen  P. & Sleumer  H.","locality": "Netherlands New Guinea  Vogelkop Peninsula  Ije river valley  Sudjak village.","latitude": "","species": "Alpinia","ID": "CANB131480.1"},{"country": "Papua New Guinea","imageName": "20171115_110238_CANB313237_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1972-06-26","longitude": "142.9500","collector2": "1707","state": "Southern Highlands","collector1": "Powell  J.M.","locality": "Taware area  waste ground on Haibuga marsh margin near Telabo","latitude": "-5.9500","species": "","ID": "CANB313237.1"},{"country": "Indonesia","imageName": "20171109_130827_CANB687329_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-05-19","longitude": "","collector2": "BW 13873","state": "West Papua","collector1": "Koster  Ch.","locality": "Mt Nerimbau  near Minjambau  Arfak Mountains","latitude": "","species": "Alpinia","ID": "CANB687329.1"},{"country": "Indonesia","imageName": "20171110_114007_CANB588011_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-02-28","longitude": "134.5","collector2": "BW 13666","state": "West Papua","collector1": "Koster  Ch.","locality": "Wondiwoi Mountains  Wandammen Peninsula","latitude": "-2.75","species": "Amomum","ID": "CANB588011"},{"country": "Papua New Guinea","imageName": "20171115_110310_CANB471256_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1992-01-23","longitude": "146.0833","collector2": "3082","state": "Madang Province","collector1": "Simaga  J.M.","locality": "Near Teptep government station  Madang Province","latitude": "-5.9167","species": "","ID": "CANB471256"},{"country": "","imageName": "20171110_091929_CANB177955_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB177955.2"},{"country": "Papua New Guinea","imageName": "20171113_130819_CANB173106_1_50pcnt.jpg","collection end": "","collection start": "1966-09-12","longitude": "142.3333","collector2": "1692","state": "Sepik","collector1": "Heyligers  P. C.","locality": "16 km WSW of Aitape; Sepik District  Territory of New Guinea","latitude": "-3.1833","species": "Riedelia Oliv.","ID": "CANB173106.1"},{"country": "Indonesia","imageName": "20171115_113308_CANB86586_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1959-05-19","longitude": "140.7167","collector2": "BW 8408","state": "Papua","collector1": "Vink  W.","locality": "Netherlands New Guinea  Hollandia  Sidoarsi Mts   200 km west of Hollandia","latitude": "-2.5333","species": "","ID": "CANB86586.1"},{"country": "Papua New Guinea","imageName": "20171113_131211_CANB180269_1_50pcnt.jpg","collection end": "","collection start": "1967-02-03","longitude": "151.0667","collector2": "N.G.F.29724","state": "","collector1": "Coode  M.; Cropley  T.; Katik  P.","locality": "Inland from Lossuk to Bagaterre  N.I. District","latitude": "-2.75","species": "Riedelia Oliv.","ID": "CANB180269.1"},{"country": "Papua New Guinea","imageName": "20171115_111742_CANB173104_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-08-09","longitude": "143.0833","collector2": "1513","state": "East Sepik","collector1": "Heyligers  P. C.","locality": "34 km SSE of Dreikikir  Sepik District  Territory of New Guinea","latitude": "-3.8333","species": "","ID": "CANB173104.1"},{"country": "Papua New Guinea","imageName": "20171113_134454_CANB686861_1_50pcnt.jpg","collection end": "","collection start": "1975-04-14","longitude": "148.0000","collector2": "36","state": "Morobe Province","collector1": "Forcol Students","locality": "Kabi  Siassi Island  Morobe Province","latitude": "-5.8333","species": "Alpinia","ID": "CANB686861"},{"country": "Papua New Guinea","imageName": "20171110_113936_CANB138441_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1935-10-17","longitude": "","collector2": "471","state": "Morobe","collector1": "Clemens","locality": "Sattelberg  Morobe District","latitude": "","species": "Amomum","ID": "CANB138441.1"},{"country": "Papua New Guinea","imageName": "20171115_095251_CANB156138_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1964-12-17","longitude": "144.295","collector2": "ANU 2200","state": "Western Highlands","collector1": "Flenley  J. R.","locality": "Near Pina  W. Highlands","latitude": "-5.795","species": "Riedelia Oliv.","ID": "CANB156138.1"},{"country": "Papua New Guinea","imageName": "20171115_112317_CANB152743_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1964-08-05","longitude": "148.0833","collector2": "5607","state": "Northern","collector1": "Pullen  R.","locality": "S. side of Hydrographers Range  near Siurane village  Managalase area  Northern Division","latitude": "-9.0833","species": "","ID": "CANB152743.1"},{"country": "Papua New Guinea","imageName": "20171115_092910_CANB587998_1_50pcnt.jpg","collection end": "","collection start": "1977-06-29","longitude": "147.10","collector2": "235","state": "","collector1": "Conn & Students","locality": "South of Buso forestry Camp Plot 57","latitude": "-7.20","species": "Alpinia","ID": "CANB00587998"},{"country": "Papua New Guinea","imageName": "20171115_085453_CANB199206_1_50pcnt.jpg","collection end": "","collection start": "1968-11-11","longitude": "","collector2": "381","state": "Western Highlands","collector1": "Bowers","locality": "Alipe  Kepaka  Upper Kaugel  Subdistrict Hagen","latitude": "","species": "Riedelia Oliv.","ID": "CANB199206.1"},{"country": "Papua New Guinea","imageName": "20171115_110156_CANB71254_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1958-09-16","longitude": "143.6667","collector2": "2474","state": "East Sepik","collector1": "Robbins  R. G.","locality": "Sepik River from Nemchan village into Nukurap  Wewak Angoram Area  Sepik District","latitude": "-3.8333","species": "","ID": "CANB71254.1"},{"country": "Papua New Guinea","imageName": "20171110_093043_CANB110741_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1954-07-07","longitude": "","collector2": "","state": "Eastern Highlands","collector1": "Womersley  J...S.","locality": "Aiyura Range","latitude": "","species": "","ID": "CANB110741.1"},{"country": "Australia","imageName": "20171110_091804_CANB204944_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "457","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB204944.2"},{"country": "Papua New Guinea","imageName": "20171115_105140_CANB542545_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1990-09-09","longitude": "142.5667","collector2": "6850","state": "East Sepik","collector1": "Takeuchi  W.","locality": "April river; Samsai ridge near Bugabugi camp","latitude": "-4.5667","species": "","ID": "CANB54545"},{"country": "Indonesia","imageName": "20171110_112932_CANB561923_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1996-11-06","longitude": "110.218333","collector2": "TL388","state": "Kalimantan Barat","collector1": "Laman  T. G.; Rachman  I. A.; Mirmanto  E.","locality": "Borneo  Kalimantan Barat  Ketapang  Gunung Palung National Park  Cabang Panti Research Site  MR2","latitude": "-1.218333","species": "Amomum","ID": "CANB561923"},{"country": "Indonesia","imageName": "20171110_101000_CANB587767_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-01-26","longitude": "","collector2": "BW 14344","state": "West Papua","collector1": "Sleumer & Vink","locality": "Mt. Sarumot  Iray  Anggi Lakes","latitude": "","species": "Alpinia","ID": "CANB5857767.1"},{"country": "Papua New Guinea","imageName": "20171110_092207_CANB156145_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1964-12-17","longitude": "","collector2": "ANU 2206","state": "Western Highlands","collector1": "Flenley  J. R.","locality": "Near Pina.","latitude": "","species": "","ID": "CANB156145.1"},{"country": "Papua New Guinea","imageName": "20171110_091737_CANB204943_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1968-12-01","longitude": "","collector2": "457","state": "Western Highlands","collector1": "Bowers","locality": "Malapuku  Kepaka  Upper Kaugel  Hagen.","latitude": "","species": "Alpinia","ID": "CANB204943.1"},{"country": "Papua New Guinea","imageName": "20171109_130548_CANB687108_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1971-07-25","longitude": "","collector2": "380","state": "Eastern Highlands","collector1": "Grubb  P. J. & Edwards  P. J.","locality": "near (W. of) Fatima R.  Marafunga Sawmill. Goroka sub-district  Eastern Highlands District","latitude": "","species": "Alpinia","ID": "CANB6867108.1"},{"country": "Australia","imageName": "20171113_133808_CANB191739_2_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB191739.2"},{"country": "Malaysia","imageName": "20171110_104938_CANB686843_2_50pcnt_qlty80.jpg","collection end": "","collection start": "1987-09-11","longitude": "113.4167","collector2": "277","state": "Sarawak","collector1": "Burley  J.S. & Lee  Bernard","locality": "60 km NE of Bintulu on Miri Road  Similajau Forest Reserve","latitude": "3.3333","species": "Anomum","ID": "CANB686843.2"},{"country": "Australia","imageName": "20171110_113151_CANB687326_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB687326.2"},{"country": "Papua New Guinea","imageName": "20171109_113529_CANB178483_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-07-23","longitude": "","collector2": "NGF 22706","state": "Morobe District","collector1": "Millar  A. N.","locality": "Above Sopa  Garaina sub-dist.","latitude": "","species": "Alpinia epiphytica Meekiong  Ipor & Tawan","ID": "CANB 178483.1"},{"country": "Papua New Guinea","imageName": "20171109_130940_CANB825891_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1993-10-30","longitude": "144.4833","collector2": "7176","state": "","collector1": "Gardner  R.O.","locality": "Schrader Range  Kaironk Valley  ridge E of Ced Stream.","latitude": "-5.2167","species": "Alpinia","ID": "CANB825891.1"},{"country": "Papua New Guinea","imageName": "20171115_112156_CANB154975_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1964-10-19","longitude": "145.8333","collector2": "6001","state": "Madang","collector1": "Pullen  R.","locality": "near Budemu village  southern slopes of the Finisterre Range  eastern Madang District","latitude": "-5.9167","species": "","ID": "CANB154975.1"},{"country": "Papua New Guinea","imageName": "20171115_100014_CANB131892_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1962-05-24","longitude": "146.416667","collector2": "10220","state": "Morobe","collector1": "Hartley  T. G.","locality": "Ravine bordering the Leron River near the Markham Valley","latitude": "-6.383333","species": "Riedelia","ID": "CANB131892"},{"country": "Indonesia","imageName": "20171115_114103_CANB149617_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1954-03-31","longitude": "98.3","collector2": "15046","state": "North Sumatra","collector1": "Alston  A. H. G.","locality": "Near Baniera  S. of Sidikalang","latitude": "2.75","species": "","ID": "CANB149617.1"},{"country": "Papua New Guinea","imageName": "20171115_085922_CANB281483_1_50pcnt.jpg","collection end": "","collection start": "1976-05-08","longitude": "146.8000","collector2": "ANU 211 27","state": "Morobe Province","collector1": "Garrett-Jones  S. E.","locality": "L. Wanum  E. shore  Lae Subdistrict","latitude": "-6.0000","species": "Riedelia Oliv.","ID": "CANB281483.1"},{"country": "Australia","imageName": "20171110_130422_CANB193804_2_50pcnt_qlty80.jpg","collection end": "","collection start": "","longitude": "","collector2": "33946","state": "","collector1": "Ridsdale  N. G.","locality": "","latitude": "","species": "","ID": "CANB193804.2"},{"country": "Australia","imageName": "20171113_134254_CANB197242_4_50pcnt.jpg","collection end": "","collection start": "","longitude": "","collector2": "","state": "","collector1": "","locality": "","latitude": "","species": "","ID": "CANB197242.4"},{"country": "Papua New Guinea","imageName": "20171110_092007_CANB175666_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-03-18","longitude": "145.916667","collector2": "ANU 5560","state": "Eastern Highlands","collector1": "Wheeler  J.M.","locality": "Ridge above Aiyura Agric. Station  Kainantu subdistrict.","latitude": "-6.333333","species": "","ID": "CANB175666.1"},{"country": "Papua New Guinea","imageName": "20171110_092121_CANB175956_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1966-10-01","longitude": "","collector2": "ANU 5892A","state": "Eastern Highlands","collector1": "Wheeler  J.M.","locality": "East ridge above Noreikora Swamp  Kainantu Subdistrict.","latitude": "","species": "","ID": "CANB175956.1"},{"country": "Papua New Guinea","imageName": "20171113_130906_CANB124931_1_50pcnt.jpg","collection end": "1953-11-01","collection start": "1953-03-01","longitude": "150.3333","collector2": "21650","state": "Milne Bay","collector1": "Brass  L. J.","locality": "Menapi  Cape Vogel Peninsula","latitude": "-10.3167","species": "Riedelia","ID": "CANB124931.1"},{"country": "Papua New Guinea","imageName": "20171113_130930_CANB125007_1_50pcnt.jpg","collection end": "","collection start": "1953-07-18","longitude": "150.1333","collector2": "23506","state": "Milne Bay","collector1": "Brass  L. J.","locality": "North slopes of Mt. Dayman  Maneau Range","latitude": "-9.8","species": "Riedelia","ID": "CANB125007.1"},{"country": "Indonesia","imageName": "20171110_111534_CANB596254_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1989-06-11","longitude": "100.4333","collector2": "2494","state": "West Kalimantan","collector1": "Burley  J. S.; Tukirin et al.","locality": "G. Bentuang area; 5-10 km N. of Masa village; 150 km N.E. of Pontianak  W. Kalimantan Province","latitude": "0.8667","species": "Amomum borneense","ID": "CANB596254"},{"country": "Papua New Guinea","imageName": "20171113_133749_CANB191738_1_50pcnt.jpg","collection end": "","collection start": "1966-07-27","longitude": "142.8333","collector2": "10686","state": "East Sepik","collector1": "Hoogland  R. D. & Craven  L. A.","locality": "Along Yapa (Hunstein River)  Ambunti Sub-district  Sepik District  Terr. of New Guinea","latitude": "-4.3333","species": "Riedelia Oliv.","ID": "CANB191738.1"},{"country": "Papua New Guinea","imageName": "20171113_131605_CANB201350_1_50pcnt.jpg","collection end": "","collection start": "1967-04-19","longitude": "146.6667","collector2": "35657","state": "Morobe","collector1": "Streimann  H.","locality": "Hump logging area  Bulolo  sub-district Wau  Morobe District","latitude": "-7.10","species": "Riedelia Oliv.","ID": "CANB201350"},{"country": "Malaysia","imageName": "20171110_132947_CANB163200_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1964-02-19","longitude": "116.5667","collector2": "RSNB No. 10","state": "Sabah","collector1": "Chew  W. L.; Corner  E. J. H.","locality": "Bembangan River  Mt. Kinabalu","latitude": "6.0833","species": "Etlingera","ID": "CANB163200.1"},{"country": "Indonesia","imageName": "20171110_101306_CANB96227_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1959-05-10","longitude": "","collector2": "4012","state": "","collector1": "Kalkman  C.","locality": "Papua. Star Mountains  Sibil Valley.","latitude": "","species": "Alpinia","ID": "CANB96227.1"},{"country": "Indonesia","imageName": "20171110_114328_CANB596991_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1999-04-02","longitude": "137.000000","collector2": "84","state": "Papua","collector1": "Rudall  P. J.; Edwards  P. J.; Hidayat  A.; Johns  R. J.; Tekege  D.; Utteridge  T.; Willis  F. R.","locality": "Mimika Regency  PT-Freeport Indonesia Concession Area: Along Main Road at Km Post 80.","latitude": "-4.283333","species": "Amomum/Etingera sp.","ID": "CANB5956991"},{"country": "Papua New Guinea","imageName": "20171110_133555_CANB825929_1_50pcnt_qlty80.jpg","collection end": "","collection start": "2000-01-07","longitude": "144.4833","collector2": "10132","state": "","collector1": "Gardner  R.O.","locality": "Schrader Range  Kaironk Valley","latitude": "-5.2167","species": "Geanthus","ID": "CANB82929"},{"country": "Papua New Guinea","imageName": "20171110_102417_CANB322482_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1960-09-06","longitude": "","collector2": "135","state": "","collector1": "Borgmann  Ernst","locality": "Komanemambuno.","latitude": "","species": "Alpinia","ID": "CANB322482.1"},{"country": "Papua New Guinea","imageName": "20171110_092453_CANB71967_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1959-04-09","longitude": "150.4167","collector2": "NGF 10806","state": "New Britain","collector1": "White  K. J.","locality": "Sabuite creek bed  several miles south west of Rikau village  Talasea sub-district.","latitude": "-5.6000","species": "Alpinia","ID": "CANB71967.1"},{"country": "Indonesia","imageName": "20171110_094925_CANB85821_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1955-02-16","longitude": "","collector2": "5525","state": "West Papua","collector1": "van Royen  P.","locality": "Netherlands New Guinea  district: Radjah Ampat  Waigeo Island  Go Isthmus. Upper stretches of Poean Creek.","latitude": "","species": "Alpinia","ID": "CANB85821.1"},{"country": "Papua New Guinea","imageName": "20171115_105603_CANB592898_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1979-11-06","longitude": "142.4167","collector2": "LAE 71520","state": "Western","collector1": "Croft  J. R. & Gideon  O.","locality": "Mougulu  Nomad Subprovince","latitude": "-6.2833","species": "","ID": "CANB00592898"},{"country": "Papua New Guinea","imageName": "20171115_093650_CANB42731_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1957-09-14","longitude": "145.3833","collector2": "848","state": "Eastern Highlands","collector1": "Robbins  R.G.","locality": "Goroka Sub-District  Mt Otto area  Collins' mill  Omahaiga river valley","latitude": "-6.0833","species": "Riedelia","ID": "CANB42731.1"},{"country": "Papua New Guinea","imageName": "20171110_130356_CANB193803_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1968-01-11","longitude": "145.9500","collector2": "NGF.33946","state": "Madang","collector1": "Ridsdale  C.E.","locality": "Kar Kar Island  Madang Sub-district  Madang District","latitude": "-4.6667","species": "Etlingera","ID": "CANB193803.1"},{"country": "French Polynesia","imageName": "20171110_111946_CANB686865_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1971-09-12","longitude": "-149.4167","collector2": "1720","state": "","collector1": "Balgooy  M. M. J. van","locality": "N. Tahiti  Papenoo Valley","latitude": "-17.5333","species": "Amomum cevuga","ID": "CANB686865"},{"country": "Papua New Guinea","imageName": "20171110_092727_CANB110721_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1955-06-10","longitude": "","collector2": "NGF 7633","state": "Western Highlands","collector1": "Womersley  J. and Millar  A.","locality": "Near Karap Village  Jimmi Valley","latitude": "","species": "","ID": "CANB110721.1"},{"country": "Papua New Guinea","imageName": "20171115_110421_CANB153310_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1963-08-23","longitude": "147.00","collector2": "N.G.F. 15909","state": "Morobe","collector1": "Millar & van Royen","locality": "Bumaiyum Creek  Buimo  Lae sub district  Morobe District  T.N.G.","latitude": "-6.75","species": "","ID": "CANB153310.1"},{"country": "Papua New Guinea","imageName": "20171109_131727_CANB587768_1_50pcnt_qlty80.jpg","collection end": "","collection start": "1973-09-27","longitude": "147.7500","collector2": "NGF 34908","state": "","collector1": "Croft  J. & Lelean  Y.","locality": "East slope to Lake Myola No. 1  District Central  Subdistrict Port Moresby","latitude": "-9.1500","species": "Alpinia","ID": "CANB587768.1"}];
+
+      // Global variables
+      window.mapMarkers = {};
+      let map;
+
+      // Enhanced error logging function with verbose logging
+      function logError(message, error = null, state = {}) {
+        // Build detailed error message
+        let errorDetails = `${message}\n`;
+        
+        // Add error information if available
+        if (error) {
+          errorDetails += `Error: ${error.message}\n`;
+          errorDetails += `Stack: ${error.stack}\n`;
+        }
+        
+        // Add state information
+        errorDetails += '\nApplication State:\n';
+        errorDetails += `Map Initialized: ${isMapInitialized()}\n`;
+        errorDetails += `Marker Count: ${Object.keys(window.mapMarkers).length}\n`;
+        
+        // Add any additional state information passed in
+        if (Object.keys(state).length > 0) {
+          errorDetails += '\nContext:\n';
+          Object.entries(state).forEach(([key, value]) => {
+            errorDetails += `${key}: ${JSON.stringify(value)}\n`;
+          });
+        }
+        
+        // Log to console for debugging
+        console.error(errorDetails);
+        
+        // If LiveCode logging function exists, use it
+        if (typeof liveCode !== 'undefined' && liveCode.smLog) {
+          liveCode.smLog(errorDetails);
+        } else {
+          alert(errorDetails);
+        }
+
+        // Update status message
+        //updateStatus(`Error: ${message}`);
+      }
+
+      // Update status message
+      function updateStatus(message) {
+        const statusDiv = document.getElementById('status');
+        if (statusDiv) {
+          statusDiv.textContent = message;
+        }
+        //logError(message);
+      }
+
+      // Global error handler
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        logError(`Global JavaScript Error:\nMessage: ${msg}\nLine: ${lineNo}\nColumn: ${columnNo}`, error);
+        return false;
+      };
+
+      // Unhandled promise rejection handler
+      window.addEventListener('unhandledrejection', function(event) {
+        logError(`Unhandled Promise Rejection: ${event.reason}`, event.reason);
+      });
+
+      // Safety check functions
+      function isMapInitialized() {
+        return map && typeof map.setView === 'function';
+      }
+
+
+      // Marker click handler
+      window.triggerMarkerClick = function(markerId) {
+        try {
+          const marker = window.mapMarkers[markerId];
+          if (marker) {
+            marker.openPopup();
+            if (isMapInitialized()) {
+              map.setView(marker.getLatLng(), map.getZoom());
+            }
+          } else {
+            logError(`Marker with ID ${markerId} not found`);
+          }
+        } catch (error) {
+          logError(`Error in triggerMarkerClick for marker ${markerId}`, error);
+        }
+      };
+
+      // Data validation function for map markers
+      function validateMapMarkerData(data) {
+        // For map markers, we only need ID, latitude and longitude
+        if (!data.ID) {
+          return {
+            valid: false,
+            message: `Missing required ID field`
+          };
+        }
+        
+        if (data.latitude === undefined || data.latitude === null || 
+            data.longitude === undefined || data.longitude === null) {
+          return {
+            valid: false,
+            message: `Missing coordinates for ID ${data.ID}`
+          };
+        }
+        
+        const lat = parseFloat(data.latitude);
+        const lon = parseFloat(data.longitude);
+        
+        if (isNaN(lat) || isNaN(lon)) {
+          return {
+            valid: false,
+            message: `Invalid coordinates for ID ${data.ID}: lat=${data.latitude}, lon=${data.longitude}`
+          };
+        }
+        
+        // Check coordinate ranges
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+          return {
+            valid: false,
+            message: `Coordinates out of range for ID ${data.ID}: lat=${lat}, lon=${lon}`
+          };
+        }
+        
+        return { valid: true };
+      }
+
+      function initMap() {
+        // Validate input data
+        if (!Array.isArray(markers)) {
+          logError('Markers is not an array', null, { markersType: typeof markers, markersValue: markers });
+          return;
+        }
+        
+        if (markers.length === 0) {
+          updateStatus('No marker data available. Map initialized but empty.');
+        }
+
+        // Clear any existing map instance
+        if (map) {
+          try {
+            map.remove();
+            map = null;
+            window.mapMarkers = {}; // Clear marker references
+          } catch (error) {
+            logError('Error cleaning up existing map', error);
+          }
+        }
+        
+        try {
+          map = L.map('map');
+          const streets = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, Intermap, NRCan, &copy; OpenStreetMap contributors, and the GIS User Community'
+          });
+          
+          const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          });
+
+          const baseMaps = {
+            "Streets": streets,
+            "Satellite": satellite
+          };
+
+          streets.addTo(map);
+          L.control.layers(baseMaps).addTo(map);
+
+          const colors = [
+            "#FF0000", "#00FF00", "#0000FF", "#FFFF00",
+            "#FF00FF", "#00FFFF", "#FF7F50", "#8A2BE2", "#7FFF00"
+          ];
+          const collectorColors = {};
+          let colorIndex = 0;
+
+          const validMapMarkers = [];
+
+          // Track counts for status reporting
+          let validMapMarkersCount = 0;
+          let errorCount = 0;
+
+          markers.forEach((data, index) => {
+            try {
+              // Ensure data is an object
+              if (typeof data !== 'object' || data === null) {
+                console.warn(`Invalid data at index ${index}: expected object, got ${typeof data}`);
+                errorCount++;
+                return;
+              }
+              
+              const dataId = data.ID || `item_${index}`;
+              
+              // Process for map if it has valid coordinates
+              const mapValidation = validateMapMarkerData(data);
+              if (mapValidation.valid) {
+                validMapMarkersCount++;
+
+                // Assign colors to collectors
+                if (data.collector1 && !collectorColors[data.collector1]) {
+                  collectorColors[data.collector1] = colors[colorIndex % colors.length];
+                  colorIndex++;
+                }
+
+                const collectorColor = data.collector1 ? collectorColors[data.collector1] : "#999999";
+                const customIcon = L.divIcon({
+                  className: 'custom-marker',
+                  html: `<div style="background-color: ${collectorColor}; width: 15px; height: 15px; border-radius: 50%;"></div>`,
+                  iconSize: [15, 15],
+                  iconAnchor: [7, 7] // Fixed: Center the icon properly
+                });
+
+                const marker = L.marker([parseFloat(data.latitude), parseFloat(data.longitude)], {
+                  icon: customIcon,
+                  title: dataId,
+                  draggable: true
+                });
+                
+                window.mapMarkers[dataId] = marker;
+
+                let popupContent = `
+                <div class="info-window">
+                  <h3>${dataId}</h3>`;
+                
+                if (data.species) {
+                  popupContent += `<p><strong>Species:</strong> ${data.species}</p>`;
+                }
+                
+                if (data['collection start']) {
+                  popupContent += `<p><strong>Collected:</strong> ${data['collection start']}</p>`;
+                }
+                
+                if (data.locality || data.state || data.country) {
+                  let location = [];
+                  if (data.locality) location.push(data.locality);
+                  if (data.state) location.push(data.state);
+                  if (data.country) location.push(data.country);
+                  popupContent += `<p><strong>Location:</strong> ${location.join(', ')}</p>`;
+                }
+                
+                if (data.collector1) {
+                  popupContent += `<p><strong>Collector 1:</strong> ${data.collector1}</p>`;
+                }
+                if (data.collector2) {
+                  popupContent += `<p><strong>Collector 2:</strong> ${data.collector2}</p>`;
+                }
+                
+                popupContent += `</div>`;
+                
+                marker.bindPopup(popupContent);
+
+                marker.on({
+                  'click': () => {
+                    try {
+                      if (typeof liveCode !== 'undefined' && liveCode.smJSObservationInfo) {
+                        liveCode.smJSObservationInfo("observation", dataId);
+                      }
+                    } catch (error) {
+                      logError(`Error in marker click handler for ${dataId}`, error);
+                    }
+                  },
+                  
+                  'dragend': () => {
+                    try {
+                      const newLatLng = marker.getLatLng();
+                      if (typeof liveCode !== 'undefined' && liveCode.smJSUpdateLatLon) {
+                        liveCode.smJSUpdateLatLon(data.imageName || dataId, newLatLng.lat, newLatLng.lng);
+                      } else {
+                        console.log(`Updated position for ${data.imageName || dataId}: ${newLatLng.lat}, ${newLatLng.lng}`);
+                      }
+                    } catch (error) {
+                      logError(`Error in marker dragend handler for ${dataId}`, error);
+                    }
+                  },
+                  
+                  'mouseover': () => {
+                    try {
+                      marker.setOpacity(0.8);
+                      if (marker._popup) {
+                        marker.openPopup();
+                      }
+                    } catch (error) {
+                      logError(`Error in marker mouseover handler for ${dataId}`, error);
+                    }
+                  },
+                  
+                  'mouseout': () => {
+                    try {
+                      marker.setOpacity(1.0);
+                      if (marker._popup) {
+                        marker.closePopup();
+                      }
+                    } catch (error) {
+                      logError(`Error in marker mouseout handler for ${dataId}`, error);
+                    }
+                  }
+                });
+
+                marker.addTo(map);
+                validMapMarkers.push([parseFloat(data.latitude), parseFloat(data.longitude)]);
+              } else if (data.latitude !== undefined || data.longitude !== undefined) {
+                console.warn(`Invalid map marker: ${mapValidation.message}`);
+              }
+
+            } catch (error) {
+              errorCount++;
+              logError(`Error processing record at index ${index}`, error, { recordData: data });
+            }
+          });
+
+          // Update status message with processing results
+          const statusMessage = markers.length === 0 
+            ? 'No data to process. Map ready for data input.'
+            : `Processed ${markers.length} records: ${validMapMarkersCount} on map${errorCount > 0 ? `, ${errorCount} errors` : ''}`;
+          updateStatus(statusMessage);
+
+          // Handle map bounds if we have valid markers
+          if (validMapMarkers.length > 0) {
+            map.fitBounds(validMapMarkers);
+          } else {
+            map.setView([0, 0], 2); // Default view if no valid markers
+          }
+
+        } catch (error) {
+          logError('Error initializing map', error);
+        }
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMap);
+      } else {
+        // DOM is already ready
+        initMap();
+      }
+    </script>
+  </body>
+</html>
